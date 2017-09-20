@@ -60,7 +60,7 @@
         function geocode(e){
             e.preventDefault();
             var addr = document.getElementById("addr").value;
-            axios.get('https://maps.googleapis.com/maps/api/geocode/json?address='+addr+'&key=AIzaSyDvZzMtPBkLOdWjNege71wffSPFtAbYpIM')
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json?address='+addr+'&key=APIKEY')
                 .then(function(response){
                     //final response from google API
                     
