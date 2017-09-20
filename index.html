@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Geocoding</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-3.2.1.js"
+    integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+    crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        #addr{
+            margin: 8px 15px;
+            width:70%;
+            display: inline-block;
+        }
+        #map{
+            margin: 10px ;
+            height:400px;
+            width:100%;
+        }
+        #submit{
+            position: relative;
+            left:30%;
+        }
+        form{
+           
+            padding: 20px;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container col-sm-5">
+        <h3 style="position: relative;left:25%"> Please enter your Address </h3>
+        <br/>
+        <form id="detail-form" >
+            <div class="form-group">
+                <label for="Address">Address:</label>
+                <input type="text" class="form-control" id="addr">
+            </div>
+            
+            <br/>
+            <input type="submit" class="btn btn-primary"  id="submit" />
+
+        </form>
+    </div>
+    <div class="container col-sm-7">    
+        <div id ="map"></div>
+    </div>
+    
+    <script>
+    
+        var detailForm = document.getElementById('detail-form');
+        
+        detailForm.addEventListener('submit',geocode);
+        function geocode(e){
+            e.preventDefault();
+            var addr = document.getElementById("addr").value;
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json?address='+addr+'&key=AIzaSyDvZzMtPBkLOdWjNege71wffSPFtAbYpIM')
+                .then(function(response){
+                    //final response from google API
+                    
+                    var results = response.data.results;
+                    var lat = response.data.results[0].geometry.location.lat;
+                    var lng = response.data.results[0].geometry.location.lng;
+                    var coords = {lat: lat, lng: lng};
+                    //call add marker to mark the coords
+                    addMarker(coords);
+                }).catch(function(error){
+                    console.log(error);
+                    });
+
+        }
+        function initMap(){
+            var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 34.0522, lng:  -118.2437},
+                    zoom: 4
+            });
+        }
+        function addMarker(coords){
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 34.0522, lng:  -118.2437},
+                    zoom: 3
+            });
+            var marker = new google.maps.Marker({
+                    position: coords,
+                    map: map
+            });  
+        }   
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=APIKEY&callback=initMap"
+    async defer></script>
+</body>
+</html>
